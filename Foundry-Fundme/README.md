@@ -1,5 +1,6 @@
 ## Foundry
 
+# this is a crowd sourcing Application!
 **Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
 
 Foundry consists of:
@@ -64,3 +65,9 @@ $ forge --help
 $ anvil --help
 $ cast --help
 ```
+
+
+SEPOLIA_RPC_URL=https://eth-sepolia.g.alchemy.com/v2/WH4VCblvDcg5UVZD1e1hm3iSLuzKLey0
+MAINNET_RPC_URL=https://eth-mainnet.g.alchemy.com/v2/LXWF-CSl2dhCKXNmPMG2cBPuvCQt5CDx
+ETHERSCAN_API_KEY=QAVQRX7DQI1I9X7B693RTBHE6ZPRWN9QFF
+PRIVATE_KEY=d37675f3689f6e0407a28466ec0c4d9bc8bc3892418d1ea5c3f570dffef83efe
