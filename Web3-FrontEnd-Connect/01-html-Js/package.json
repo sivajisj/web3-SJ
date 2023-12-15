@@ -1,0 +1,21 @@
+{
+  "name": "01-html-js",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "browserify index.js --standalone bundle -o ./dist/bundle.js",
+    "watch": "watchify index.js --standalone bundle -o ./dist/bundle.js -v"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ethers": "^6.9.0",
+    "http-server": "^14.1.1"
+  },
+  "devDependencies": {
+    "browserify": "^17.0.0",
+    "babelify": "^10.0.0"
+  }
+}

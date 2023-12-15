@@ -4,3 +4,15 @@
 [submodule "solidity-foundry/Foundry-Fundme/lib/chainlink-brownie-contracts"]
 	path = solidity-foundry/Foundry-Fundme/lib/chainlink-brownie-contracts
 	url = https://github.com/smartcontractkit/chainlink-brownie-contracts
+[submodule "Foundry-Fundme/lib/forge-std"]
+	path = Foundry-Fundme/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
+[submodule "Foundry-Fundme/lib/chainlink-brownie-contracts"]
+	path = Foundry-Fundme/lib/chainlink-brownie-contracts
+	url = https://github.com/smartcontractkit/chainlink-brownie-contracts
+[submodule "Foundry-Fundme/lib/foundry-devops"]
+	path = Foundry-Fundme/lib/foundry-devops
+	url = https://github.com/ChainAccelOrg/foundry-devops
+[submodule "foundry-simpleStorage/lib/forge-std"]
+	path = foundry-simpleStorage/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
