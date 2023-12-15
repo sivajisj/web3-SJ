@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "browserify index.js --standalone bundle -o ./dist/bundle.js",
+    "watch": "watchify index.js --standalone bundle -o ./dist/bundle.js -v"
   },
   "keywords": [],
   "author": "",
@@ -12,5 +13,9 @@
   "dependencies": {
     "ethers": "^6.9.0",
     "http-server": "^14.1.1"
+  },
+  "devDependencies": {
+    "browserify": "^17.0.0",
+    "babelify": "^10.0.0"
   }
 }
