@@ -35,9 +35,23 @@ contract Raffle {
     error Raffle_NotEnoughETHSent();
 
     uint256 private immutable i_entranceFee;
+    uint256 private immutable i_interval;
+    uint256 private s_lastTimeStamp;
 
-    constructor(uint256 entranceFee){
+    // keep all track of participants
+
+    address payable[] private s_players;
+
+    //Events
+
+    event Enterraffle(address indexed player);
+
+    // mapping (address => uint) name;
+
+    constructor(uint256 entranceFee, uint256 interval){
         i_entranceFee = entranceFee ;
+        i_interval = interval;
+        s_lastTimeStamp = block.timestamp;
     }
 
        function enterRaffle() external payable {
@@ -45,10 +59,24 @@ contract Raffle {
         if(msg.value < i_entranceFee){
             revert Raffle_NotEnoughETHSent();
         }
+        s_players.push(payable(msg.sender));
+
+        //1 .Makes migration easier
+        //2 .Makes front end "indexing" easier
+
+        emit Enterraffle(msg.sender);
        }    
 
+       // Get a randome number and using this for pick a player
+       // Be automatically called
+       function pickWinner() view external{
+      
+      //check if enough time is passed
+      if(block.timestamp - s_lastTimeStamp < i_interval){
+        revert();
+      }
 
-       function pickWinner() public{
+
 
        }
 
