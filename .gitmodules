@@ -16,3 +16,6 @@
 [submodule "foundry-simpleStorage/lib/forge-std"]
 	path = foundry-simpleStorage/lib/forge-std
 	url = https://github.com/foundry-rs/forge-std
+[submodule "foundry-smart-contract-lottery-f23/lib/forge-std"]
+	path = foundry-smart-contract-lottery-f23/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
