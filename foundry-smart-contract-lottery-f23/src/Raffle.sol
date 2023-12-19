@@ -36,6 +36,11 @@ contract Raffle is VRFConsumerBaseV2 {
     error Raffle_NotEnoughETHSent();
      error Raffle__TransferFailed();
      error Raffle_RaffleNotOpen();
+     error Raffle__UpkeepNotNeeded(
+        uint256 currentBalance,
+        uint256 numPlayers,
+        uint256 raffleState
+     );
 
 
    /* Type declarations */
@@ -101,6 +106,28 @@ contract Raffle is VRFConsumerBaseV2 {
         emit Enterraffle(msg.sender);
     }
 
+
+      /**
+     * @dev This is the function that the Chainlink Keeper nodes call
+     * they look for `upkeepNeeded` to return True.
+     * the following should be true for this to return true:
+     * 1. The time interval has passed between raffle runs.
+     * 2. The lottery is open.
+     * 3. The contract has ETH.
+     * 4. Implicity, your subscription is funded with LINK.
+     */
+
+    function checkUpKeep(
+        bytes memory /*checkData */
+    ) public view returns(bool upKeepNeeded , bytes memory ){
+          bool isOpen = RaffleState.OPEN == s_raffleState;
+          bool timePassed = ((block.timestamp - s_lastTimeStamp) > i_interval);
+          bool hasPlayers = s_players.length > 0;
+          bool hasBalance = address(this).balance > 0;
+          upKeepNeeded = (timePassed && isOpen && hasBalance && hasPlayers);
+          return (upKeepNeeded,"0x0");
+    }
+
     // Get a randome number and using this for pick a player
     // Be automatically called
     function pickWinner() external {
@@ -116,6 +143,33 @@ contract Raffle is VRFConsumerBaseV2 {
             i_callbackGasLimit,
             NUM_WORDS
         );
+    }
+
+
+      /**
+     * @dev Once `checkUpkeep` is returning `true`, this function is called
+     * and it kicks off a Chainlink VRF call to get a random winner.
+     */
+    function performUpkeep(bytes calldata /* performData */) external  {
+        (bool upkeepNeeded, ) = checkUpKeep("");
+        // require(upkeepNeeded, "Upkeep not needed");
+        if (!upkeepNeeded) {
+            revert Raffle__UpkeepNotNeeded(
+                address(this).balance,
+                s_players.length,
+                uint256(s_raffleState)
+            );
+        }
+        s_raffleState = RaffleState.CALCULATING;
+        i_vrfCoordinator.requestRandomWords(
+            i_gasLane,
+            i_subscriptionId,
+            REQUEST_CONFIRMATIONS,
+            i_callbackGasLimit,
+            NUM_WORDS
+        );
+        // Quiz... is this redundant?
+        // emit RequestedRaffleWinner(requestId);
     }
 
         /**
