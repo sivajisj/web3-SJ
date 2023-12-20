@@ -8,6 +8,12 @@ import {Test,console} from "forge-std/Test.sol";
 import {HelperConfig} from "../../script/HelperConfig.s.sol";
 
 contract RaffleTest is Test{
+
+  /* Events */
+
+  event RaffleEnter(address indexed player);
+
+
   
     Raffle public raffle;
     HelperConfig public helperConfig;
@@ -24,7 +30,7 @@ contract RaffleTest is Test{
 
 
 
-    function setup() external {
+    function setUp() external {
       DeployRaffle deployer = new DeployRaffle();
        (raffle, helperConfig) = deployer.run();
        (
@@ -33,13 +39,44 @@ contract RaffleTest is Test{
         vrfCoordinator,
         subscriptionId,
         gasLane,
-        callbackGasLimit,
+        callbackGasLimit
        ) = helperConfig.activeNetworkConfig();
+       vm.deal(PLAYER, STARTING_USER_BALANCE);
 
     }
 
 
       function testRaffleInitializesInOpenState() public view {
         assert(raffle.getRaffleState() == Raffle.RaffleState.OPEN);
+    }
+
+    function testRaffleRevertWhenYouDontPayEnoughEth() public {
+      //Arrange
+      vm.prank(PLAYER);
+
+      //Act  //assert
+      vm.expectRevert(Raffle.Raffle_NotEnoughETHSent.selector);
+      raffle.enterRaffle();
+      
+
+
+    }
+
+    function testRaffleRecordsPlayerWhenTheyEnter() public {
+      vm.prank(PLAYER);
+      raffle.enterRaffle{value : entranceFee}();
+      address playerRecorded = raffle.getPlayer(0);
+      assert(playerRecorded == PLAYER);
+    }
+
+    function testEmitsEventOnEntrance() public{
+      // Arrange
+        vm.prank(PLAYER);
+
+        // Act / Assert
+        vm.expectEmit(true, false, false, false, address(raffle));
+        emit RaffleEnter(PLAYER);
+        raffle.enterRaffle{value: entranceFee}();
+
     }
 }

@@ -11,7 +11,7 @@ import {VRFCoordinatorV2Mock} from "@chainlink/contracts/src/v0.8/mocks/VRFCoord
 
 contract HelperConfig is Script{
 
-    NetworkConfig public activeNetworkConfig;
+  
 
 
 
@@ -24,8 +24,10 @@ contract HelperConfig is Script{
         uint32 callbackGasLimit;
       
     }
+
+      NetworkConfig public activeNetworkConfig;
     
-    NetworkConfig public c;
+  
         constructor(){
         if(block.chainid == 11155111){
             activeNetworkConfig = getSepoliaEthConfig();
