@@ -18,7 +18,8 @@ contract DeployRaffle is Script{
         address vrfCoordinator,
         uint64 subscriptionId,
         bytes32 gasLane,
-        uint32 callbackGasLimit
+        uint32 callbackGasLimit,
+        address link
         ) = helperConfig.activeNetworkConfig();
 
         if(subscriptionId == 0){
@@ -38,7 +39,8 @@ contract DeployRaffle is Script{
          vrfCoordinator,
          subscriptionId,
          gasLane,
-         callbackGasLimit
+         callbackGasLimit,
+         link
         );
 
         vm.stopBroadcast();
