@@ -18,7 +18,7 @@ contract RaffleTest is Test{
     Raffle public raffle;
     HelperConfig public helperConfig;
 
-    uint256 entranceFee;
+    uint256 entranceFee = 0.02 ether;
     uint256 interval;
     address vrfCoordinator;
     uint64 subscriptionId;
@@ -27,13 +27,16 @@ contract RaffleTest is Test{
     address link;
 
      address public PLAYER = makeAddr("player");
-     uint256 public constant STARTING_USER_BALANCE = 10 ether;
+     uint256 public constant STARTING_USER_BALANCE = 15 ether;
 
 
 
     function setUp() external {
       DeployRaffle deployer = new DeployRaffle();
        (raffle, helperConfig) = deployer.run();
+        console.log("Raffle contract deployed at:", address(raffle));
+   console.log("HelperConfig contract deployed at:", address(helperConfig));
+           vm.deal(PLAYER, STARTING_USER_BALANCE);
        (
         ,
         interval,
@@ -43,7 +46,13 @@ contract RaffleTest is Test{
         callbackGasLimit,
         
           ) = helperConfig.activeNetworkConfig();
-       vm.deal(PLAYER, STARTING_USER_BALANCE);
+
+          console.log("Entrance Fee:", entranceFee);
+          console.log("Interval:", interval);
+          console.log("VRF Coordinator:", vrfCoordinator);
+          console.log("Subscription ID:", subscriptionId);
+        
+          console.log("Callback Gas Limit:", callbackGasLimit);
 
     }
 

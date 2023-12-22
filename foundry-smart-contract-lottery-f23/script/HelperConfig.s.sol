@@ -39,13 +39,13 @@ contract HelperConfig is Script{
         }
     }
 
-    function getSepoliaEthConfig() public view returns(NetworkConfig memory){ 
+    function getSepoliaEthConfig() public  view returns(NetworkConfig memory sepoliaNetworkConfig){ 
         
         return NetworkConfig({
             entranceFee: 0.01 ether ,
             interval: 30,
-            vrfCoordinator : 0x8103B0A8A00be2DDC778e6e7eaa21791Cd364625,
-            subscriptionId : 7990,
+            vrfCoordinator : 0x271682DEB8C4E0901D1a1550aD2e64D568E69909,
+            subscriptionId : 0,
             gasLane :0x474e34a077df58807dbe9c96d3c009b23b3c6d0cce433e59bbf5b34f823bc56c,
             callbackGasLimit : 500000,
             link : 0x779877A7B0D9E8603169DdbD7836e478b4624789
@@ -76,8 +76,8 @@ contract HelperConfig is Script{
             entranceFee: 0.01 ether ,
             interval: 30,
             vrfCoordinator : address(vrfCoordinatorMock),
-            subscriptionId : 7990,
-            gasLane :0x474e34a077df58807dbe9c96d3c009b23b3c6d0cce433e59bbf5b34f823bc56c,
+            subscriptionId : 0,
+            gasLane :0x9fe0eebf5e446e3c998ec9bb19951541aee00bb90ea201ae456421a2ded86805,
             callbackGasLimit : 500000,
             link : address(link)
 
