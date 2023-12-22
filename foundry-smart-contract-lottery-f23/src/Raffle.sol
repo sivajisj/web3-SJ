@@ -36,6 +36,11 @@ contract Raffle is VRFConsumerBaseV2 {
     error Raffle_NotEnoughETHSent();
      error Raffle__TransferFailed();
      error Raffle_RaffleNotOpen();
+     error Raffle__UpkeepNotNeeded(
+        uint256 currentBalance,
+        uint256 numPlayers,
+        uint256 raffleState
+     );
 
 
    /* Type declarations */
@@ -61,7 +66,7 @@ contract Raffle is VRFConsumerBaseV2 {
 
     //Events
 
-    event Enterraffle(address indexed player);
+    event RaffleEnter(address indexed player);
     event WinnerPicked(address indexed winner);
 
     // mapping (address => uint) name;
@@ -73,6 +78,7 @@ contract Raffle is VRFConsumerBaseV2 {
         uint64 subscriptionId,
         bytes32 gasLane,
         uint32 callbackGasLimit
+   
     ) VRFConsumerBaseV2(vrfCoordinator){
         i_entranceFee = entranceFee;
         i_interval = interval;
@@ -98,7 +104,29 @@ contract Raffle is VRFConsumerBaseV2 {
         //1 .Makes migration easier
         //2 .Makes front end "indexing" easier
 
-        emit Enterraffle(msg.sender);
+        emit RaffleEnter(msg.sender);
+    }
+
+
+      /**
+     * @dev This is the function that the Chainlink Keeper nodes call
+     * they look for `upkeepNeeded` to return True.
+     * the following should be true for this to return true:
+     * 1. The time interval has passed between raffle runs.
+     * 2. The lottery is open.
+     * 3. The contract has ETH.
+     * 4. Implicity, your subscription is funded with LINK.
+     */
+
+    function checkUpKeep(
+        bytes memory /*checkData */
+    ) public view returns(bool upKeepNeeded , bytes memory ){
+          bool isOpen = RaffleState.OPEN == s_raffleState;
+          bool timePassed = ((block.timestamp - s_lastTimeStamp) > i_interval);
+          bool hasPlayers = s_players.length > 0;
+          bool hasBalance = address(this).balance > 0;
+          upKeepNeeded = (timePassed && isOpen && hasBalance && hasPlayers);
+          return (upKeepNeeded,"0x0");
     }
 
     // Get a randome number and using this for pick a player
@@ -116,6 +144,33 @@ contract Raffle is VRFConsumerBaseV2 {
             i_callbackGasLimit,
             NUM_WORDS
         );
+    }
+
+
+      /**
+     * @dev Once `checkUpkeep` is returning `true`, this function is called
+     * and it kicks off a Chainlink VRF call to get a random winner.
+     */
+    function performUpkeep(bytes calldata /* performData */) external  {
+        (bool upkeepNeeded, ) = checkUpKeep("");
+        // require(upkeepNeeded, "Upkeep not needed");
+        if (!upkeepNeeded) {
+            revert Raffle__UpkeepNotNeeded(
+                address(this).balance,
+                s_players.length,
+                uint256(s_raffleState)
+            );
+        }
+        s_raffleState = RaffleState.CALCULATING;
+        i_vrfCoordinator.requestRandomWords(
+            i_gasLane,
+            i_subscriptionId,
+            REQUEST_CONFIRMATIONS,
+            i_callbackGasLimit,
+            NUM_WORDS
+        );
+        // Quiz... is this redundant?
+        // emit RequestedRaffleWinner(requestId);
     }
 
         /**
@@ -150,5 +205,13 @@ contract Raffle is VRFConsumerBaseV2 {
 
     function getEntranceFee() external view returns (uint256) {
         return i_entranceFee;
+    }
+
+    function getRaffleState() external view returns(RaffleState) {
+        return s_raffleState;
+    }
+
+    function getPlayer(uint256 indexOfPlayer) external view returns(address) {
+        return s_players[indexOfPlayer];
     }
 }
