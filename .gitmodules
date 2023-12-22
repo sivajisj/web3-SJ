@@ -25,3 +25,6 @@
 [submodule "foundry-smart-contract-lottery-f23/lib/solmate"]
 	path = foundry-smart-contract-lottery-f23/lib/solmate
 	url = https://github.com/transmissions11/solmate
+[submodule "foundry-smart-contract-lottery-f23/lib/foundry-devops"]
+	path = foundry-smart-contract-lottery-f23/lib/foundry-devops
+	url = https://github.com/ChainAccelOrg/foundry-devops

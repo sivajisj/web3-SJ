@@ -35,13 +35,13 @@ contract RaffleTest is Test{
       DeployRaffle deployer = new DeployRaffle();
        (raffle, helperConfig) = deployer.run();
        (
-        entranceFee,
+        ,
         interval,
         vrfCoordinator,
         subscriptionId,
         gasLane,
         callbackGasLimit,
-        link
+        
           ) = helperConfig.activeNetworkConfig();
        vm.deal(PLAYER, STARTING_USER_BALANCE);
 
